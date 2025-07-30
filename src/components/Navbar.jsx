@@ -7,6 +7,7 @@ export default function Navbar() {
       <div className="navbar-title">Insurance-Wheels</div>
       <div className="navbar-links">
         <Link to="/dashboard">Dashboard</Link>
+        <Link to="/vehicles">Vehicles</Link>
         <Link to="/vehicles/new">Add Vehicle</Link>
       </div>
     </nav>

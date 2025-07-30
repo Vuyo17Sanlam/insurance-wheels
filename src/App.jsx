@@ -5,6 +5,8 @@ import EditVehicle from './pages/EditVehicle';
 import Quotes from './pages/Quotes';
 import ConfirmQuote from './pages/ConfirmQuote';
 import Navbar from './components/Navbar';
+import Vehicles from './pages/Vehicles';
+
 
 import './App.css';
 
@@ -17,6 +19,8 @@ function App() {
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/vehicles/new" element={<AddVehicle />} />
+          <Route path="/vehicles" element={<Vehicles />} />
+
           <Route path="/vehicles/:id/edit" element={<EditVehicle />} />
           <Route path="/quotes/:vehicleId" element={<Quotes />} />
           <Route path="/confirm" element={<ConfirmQuote />} />
