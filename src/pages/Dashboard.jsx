@@ -1,8 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
+
 import { TextField, Select, MenuItem, Button, Typography } from '@mui/material';
 import Vehicle_Card from '../components/Vehicle_Card';
 
 const Dashboard = () => {
+    const navigate = useNavigate();
+
     const [searchTerm, setSearchTerm] = useState('');
     const [yearFilter, setYearFilter] = useState('');
 
@@ -26,6 +30,11 @@ const Dashboard = () => {
   ];
 
   const [vehicleList, setVehicleList] = useState(vehicles);
+
+  const handleDelete = (id) => {
+    const updated = vehicleList.filter((v) => v.id !== id);
+    setVehicleList(updated);
+  };
 
   const filteredVehicles = vehicleList.filter((v) => {
     const matchSearch = v.make.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -62,9 +71,16 @@ Vehicle Dashboard  </Typography>
         </Select>
       </div>
 
-      {filteredVehicles.map((v) => (
-        <Vehicle_Card key={v.id} vehicle={v} />
-      ))}
+
+
+
+      {filteredVehicles.length > 0 ? (
+        filteredVehicles.map((v) => (
+          <Vehicle_Card key={v.id} vehicle={v} onDelete={handleDelete} />
+        ))
+      ) : (
+        <p>No vehicles found.</p>
+      )}
     </div>
   );
 };

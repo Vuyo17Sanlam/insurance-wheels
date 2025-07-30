@@ -1,6 +1,10 @@
-import { Card, CardContent, Typography, CardMedia } from '@mui/material';
+import { useNavigate } from 'react-router';
 
-const Vehicle_Card = ({ vehicle }) => {
+import { Card, CardContent, Typography, Button, CardMedia } from '@mui/material';
+
+const Vehicle_Card = ({ vehicle, onDelete }) => {
+    const navigate = useNavigate();
+
   return (
     <Card style={{ maxWidth: 300, margin: '10px auto' }}>
       <CardMedia
@@ -20,6 +24,35 @@ const Vehicle_Card = ({ vehicle }) => {
           License: {vehicle.license}
         </Typography>
       </CardContent>
+
+
+
+      <div style={{ marginTop: '10px' }}>
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={() => navigate(`/vehicles/${vehicle.id}/edit`)}
+          style={{ marginRight: '5px' }}
+        >
+          Edit
+        </Button>
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={() => navigate(`/quotes/${vehicle.id}`)}
+          style={{ marginRight: '5px' }}
+        >
+          Quotes
+        </Button>
+        <Button
+          size="small"
+          variant="outlined"
+          color="error"
+          onClick={() => onDelete(vehicle.id)}
+        >
+          Delete
+        </Button>
+      </div>
     </Card>
   );
 };
