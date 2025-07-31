@@ -6,114 +6,184 @@ import {
   Card,
   CardContent,
   Typography,
+  Container,
+  CircularProgress,
 } from '@mui/material';
-
-const mockVehicles = [
-  {
-    id: 1,
-    make: 'Toyota',
-    model: 'Camry',
-    year: 2020,
-    license: 'ABC-1234',
-    image:
-      'https://cdn.imagin.studio/getimage?customer=scs&make=Toyota&modelFamily=Camry&zoomType=fullscreen',
-  },
-  {
-    id: 2,
-    make: 'Honda',
-    model: 'Civic',
-    year: 2019,
-    license: 'XYZ-5678',
-    image:
-      'https://cdn.imagin.studio/getimage?customer=scs&make=Honda&modelFamily=Civic&zoomType=fullscreen',
-  },
-];
+import { getVehicles, updateVehicle } from '../api/Vehicle_Data';
 
 const EditVehicle = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const [vehicleList, setVehicleList] = useState([]);
   const [vehicle, setVehicle] = useState({
     make: '',
     model: '',
     year: '',
     license: '',
     image: '',
+    mileage: '',
+    status: '',
+    lastService: '',
+    value: '',
+    fuelType: ''
   });
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    const existing = mockVehicles.find((v) => v.id === Number(id));
-    if (existing) {
-      setVehicle(existing);
-    }
+    const fetchData = async () => {
+      try {
+        const data = await getVehicles();
+        setVehicleList(data);
+
+        const existing = data.find((v) => v.id === (id));
+        if (existing) {
+          setVehicle(existing);
+        } else {
+          console.warn(`Vehicle with ID ${id} not found.`);
+        }
+      } catch (error) {
+        console.error('Failed to fetch vehicles:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [id]);
 
   const handleChange = (e) => {
-    setVehicle({ ...vehicle, [e.target.name]: e.target.value });
+    setVehicle((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Updated Vehicle:', vehicle);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const updatedData = { ...vehicle };
+    delete updatedData.id;
+
+    await updateVehicle(id, updatedData);
+    console.log('Vehicle updated successfully');
     navigate('/dashboard');
-  };
+  } catch (error) {
+    console.error('Update failed:', error);
+  }
+};
+
+  if (loading) {
+    return (
+      <Container maxWidth="xl" style={{ padding: '80px', textAlign: 'center' }}>
+        <CircularProgress />
+        <Typography variant="h6" color="textSecondary" sx={{ mt: 2 }}>
+          Loading vehicle data...
+        </Typography>
+      </Container>
+    );
+  }
 
   return (
-    <Card style={{ maxWidth: 500, margin: '30px auto', padding: '20px' }}>
+    <Card sx={{ maxWidth: 500, m: '30px auto', p: 2 }}>
       <CardContent>
         <Typography variant="h5" gutterBottom>
           Edit Vehicle Details
         </Typography>
 
         <form onSubmit={handleSubmit}>
-          <TextField
-            label="Make"
-            name="make"
-            value={vehicle.make}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Model"
-            name="model"
-            value={vehicle.model}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Year"
-            name="year"
-            type="number"
-            value={vehicle.year}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="License Plate"
-            name="license"
-            value={vehicle.license}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Image URL"
-            name="image"
-            value={vehicle.image}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
+        <TextField
+  label="Make"
+  name="make"
+  value={vehicle.make}
+  onChange={handleChange}
+  fullWidth
+  margin="normal"
+/>
+<TextField
+  label="Model"
+  name="model"
+  value={vehicle.model}
+  onChange={handleChange}
+  fullWidth
+  margin="normal"
+/>
+<TextField
+  label="Year"
+  name="year"
+  type="number"
+  value={vehicle.year}
+  onChange={handleChange}
+  fullWidth
+  margin="normal"
+/>
+<TextField
+  label="License Plate"
+  name="license"
+  value={vehicle.license}
+  onChange={handleChange}
+  fullWidth
+  margin="normal"
+/>
+<TextField
+  label="Image URL"
+  name="image"
+  value={vehicle.image}
+  onChange={handleChange}
+  fullWidth
+  margin="normal"
+/>
+<TextField
+  label="Mileage"
+  name="mileage"
+  type="number"
+  value={vehicle.mileage}
+  onChange={handleChange}
+  fullWidth
+  margin="normal"
+/>
+<TextField
+  label="Status"
+  name="status"
+  value={vehicle.status}
+  onChange={handleChange}
+  fullWidth
+  margin="normal"
+/>
+<TextField
+  label="Last Service Date"
+  name="lastService"
+  type="date"
+  value={vehicle.lastService}
+  onChange={handleChange}
+  fullWidth
+  margin="normal"
+  InputLabelProps={{ shrink: true }}
+/>
+<TextField
+  label="Value"
+  name="value"
+  type="number"
+  value={vehicle.value}
+  onChange={handleChange}
+  fullWidth
+  margin="normal"
+/>
+<TextField
+  label="Fuel Type"
+  name="fuelType"
+  value={vehicle.fuelType}
+  onChange={handleChange}
+  fullWidth
+  margin="normal"
+/>
+
           <Button
             type="submit"
             variant="contained"
             color="primary"
             fullWidth
-            style={{ marginTop: '20px' }}
+            sx={{ mt: 2 }}
           >
-             Save Changes
+            Save Changes
           </Button>
         </form>
       </CardContent>

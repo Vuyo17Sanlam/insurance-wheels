@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 import {
   TextField,
@@ -12,10 +14,14 @@ import {
   Paper,
   Box,
   InputAdornment,
-  IconButton
+  Snackbar,
+  Alert,
+
 } from '@mui/material';
 import { Search, FilterAlt, Add } from '@mui/icons-material';
 import Vehicle_Card from '../components/Vehicle_Card';
+import { getVehicles, deleteVehicle } from '../api/Vehicle_Data';
+
 
 const Vehicles = () => {
   const navigate = useNavigate();
@@ -23,156 +29,47 @@ const Vehicles = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [yearFilter, setYearFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-  const vehicles = [
-    {
-      id: 1,
-      make: 'Toyota',
-      model: 'Corolla',
-      year: 2021,
-      license: 'CA 123-456',
-      image: 'https://cdn.imagin.studio/getimage?customer=img&make=Toyota&modelFamily=Corolla&zoomType=fullscreen',
-      mileage: 18000,
-      status: 'Active',
-      lastService: '2024-06-10',
-      value: 320000,
-      fuelType: 'Petrol'
-    },
-    {
-      id: 2,
-      make: 'Volkswagen',
-      model: 'Polo',
-      year: 2020,
-      license: 'GP 987-654',
-      image: 'https://cdn.imagin.studio/getimage?customer=img&make=Volkswagen&modelFamily=Polo&zoomType=fullscreen',
-      mileage: 29500,
-      status: 'Active',
-      lastService: '2024-05-22',
-      value: 280000,
-      fuelType: 'Petrol'
-    },
-    {
-      id: 3,
-      make: 'Ford',
-      model: 'Ranger',
-      year: 2022,
-      license: 'ZN 456-789',
-      image: 'https://cdn.imagin.studio/getimage?customer=img&make=Ford&modelFamily=Ranger&zoomType=fullscreen',
-      mileage: 12500,
-      status: 'Active',
-      lastService: '2024-04-05',
-      value: 510000,
-      fuelType: 'Diesel'
-    },
-    {
-      id: 4,
-      make: 'BMW',
-      model: 'X5',
-      year: 2021,
-      license: 'L 234-321',
-      image: 'https://cdn.imagin.studio/getimage?customer=img&make=BMW&modelFamily=X5&zoomType=fullscreen',
-      mileage: 23000,
-      status: 'In Maintenance',
-      lastService: '2024-03-18',
-      value: 850000,
-      fuelType: 'Diesel'
-    },
-    {
-      id: 5,
-      make: 'Mercedes-Benz',
-      model: 'C-Class',
-      year: 2019,
-      license: 'FS 111-999',
-      image: 'https://cdn.imagin.studio/getimage?customer=img&make=Mercedes-Benz&modelFamily=C-Class&zoomType=fullscreen',
-      mileage: 40000,
-      status: 'Active',
-      lastService: '2024-06-01',
-      value: 620000,
-      fuelType: 'Petrol'
-    },
-    {
-      id: 6,
-      make: 'Nissan',
-      model: 'Navara',
-      year: 2020,
-      license: 'EC 765-432',
-      image: 'https://cdn.imagin.studio/getimage?customer=img&make=Nissan&modelFamily=Navara&zoomType=fullscreen',
-      mileage: 38000,
-      status: 'Active',
-      lastService: '2024-01-10',
-      value: 450000,
-      fuelType: 'Diesel'
-    },
-    {
-      id: 7,
-      make: 'Hyundai',
-      model: 'Tucson',
-      year: 2021,
-      license: 'NW 222-888',
-      image: 'https://cdn.imagin.studio/getimage?customer=img&make=Hyundai&modelFamily=Tucson&zoomType=fullscreen',
-      mileage: 21000,
-      status: 'Active',
-      lastService: '2024-05-10',
-      value: 390000,
-      fuelType: 'Petrol'
-    },
-    {
-      id: 8,
-      make: 'Kia',
-      model: 'Sportage',
-      year: 2020,
-      license: 'MP 333-777',
-      image: 'https://cdn.imagin.studio/getimage?customer=img&make=Kia&modelFamily=Sportage&zoomType=fullscreen',
-      mileage: 31000,
-      status: 'Active',
-      lastService: '2024-04-20',
-      value: 410000,
-      fuelType: 'Petrol'
-    },
-    {
-      id: 9,
-      make: 'Suzuki',
-      model: 'Swift',
-      year: 2022,
-      license: 'WC 555-444',
-      image: 'https://cdn.imagin.studio/getimage?customer=img&make=Suzuki&modelFamily=Swift&zoomType=fullscreen',
-      mileage: 15000,
-      status: 'Active',
-      lastService: '2024-06-15',
-      value: 230000,
-      fuelType: 'Petrol'
-    },
-    {
-      id: 10,
-      make: 'Audi',
-      model: 'A3',
-      year: 2021,
-      license: 'KZN 666-333',
-      image: 'https://cdn.imagin.studio/getimage?customer=img&make=Audi&modelFamily=A3&zoomType=fullscreen',
-      mileage: 17000,
-      status: 'Active',
-      lastService: '2024-05-30',
-      value: 540000,
-      fuelType: 'Petrol'
+
+
+  const [vehicleList, setVehicleList] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getVehicles();
+        setVehicleList(data);
+        console.log('Actual IDs:', data.map(v => v.id));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteVehicle(id);
+      setVehicleList((prev) => prev.filter((v) => v.id !== id));
+      setSnackbar({ open: true, message: 'Vehicle deleted', severity: 'success' });
+    } catch (error) {
+      console.error('Delete failed:', error);
+      setSnackbar({ open: true, message: 'Delete failed', severity: 'error' });
     }
-  ];
-
-  const [vehicleList, setVehicleList] = useState(vehicles);
-
-  const handleDelete = (id) => {
-    const updated = vehicleList.filter((v) => v.id !== id);
-    setVehicleList(updated);
   };
 
   const handleAddVehicle = () => {
     navigate('/vehicles/new');
   };
 
-  const handleRefresh = () => {
-    setSearchTerm('');
-    setYearFilter('');
-    setStatusFilter('');
-  };
+
 
   const filteredVehicles = vehicleList.filter((v) => {
     const matchSearch = v.make.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -185,6 +82,18 @@ const Vehicles = () => {
 
   const years = [...new Set(vehicleList.map(v => v.year))].sort((a, b) => b - a);
   const statuses = [...new Set(vehicleList.map(v => v.status))];
+
+  if (loading) {
+    return (
+      <Container maxWidth="xl" style={{ padding: '80px', textAlign: 'center' }}>
+        <CircularProgress />
+        <Typography variant="h6" color="textSecondary" style={{ marginTop: '20px' }}>
+          Loading vehicles...
+        </Typography>
+      </Container>
+    );
+  }
+
 
   return (
     <Container maxWidth="xl" style={{ padding: '20px' }}>
@@ -251,8 +160,7 @@ const Vehicles = () => {
             ))}
           </Select>
 
-          <IconButton onClick={handleRefresh} color="primary" title="Reset filters">
-          </IconButton>
+
         </Box>
       </Paper>
 
@@ -279,6 +187,16 @@ const Vehicles = () => {
           </Button>
         </Paper>
       )}
+
+<Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      >
+        <Alert severity={snackbar.severity} variant="filled">
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
