@@ -10,7 +10,9 @@ import {
   DialogContent,
   DialogActions,
   Snackbar,
-  Alert
+  Alert,
+  Box,
+  useTheme
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,6 +44,7 @@ const quoteData = [
 ];
 
 const Quotes = () => {
+  const theme = useTheme();
   const [selectedQuote, setSelectedQuote] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [showSnackbar, setShowSnackbar] = useState(false);
@@ -65,46 +68,78 @@ const Quotes = () => {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
-
-      <Typography variant="subtitle1" gutterBottom>
+    <Box sx={{
+      p: 3,
+      bgcolor: 'background.default',
+      minHeight: '100vh'
+    }}>
+      <Typography variant="subtitle1" gutterBottom color="text.primary">
          Confirm one quote and view a summary
       </Typography>
 
       <Grid container spacing={3} sx={{ mt: 2 }}>
         {quoteData.map((quote) => (
           <Grid item xs={12} md={4} key={quote.id}>
-            <Card sx={{ borderRadius: '16px', backgroundColor: '#f5f5f5' }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>{quote.provider}</Typography>
-                <Typography variant="body1"> Premium: {quote.monthlyPremium}</Typography>
-                <Typography variant="body2"> Cover: {quote.coverType}</Typography>
-                <Typography variant="body2"> Excess: {quote.excess}</Typography>
-                <Typography variant="body2"> Benefits:</Typography>
-                <ul>
+            <Card sx={{
+              borderRadius: '16px',
+              bgcolor: 'background.paper',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
+              <CardContent sx={{ flexGrow: 1 }}>
+                <Typography variant="h6" gutterBottom color="text.primary">
+                  {quote.provider}
+                </Typography>
+                <Typography variant="body1" color="text.primary">
+                  Premium: {quote.monthlyPremium}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Cover: {quote.coverType}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Excess: {quote.excess}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Benefits:
+                </Typography>
+                <ul style={{ color: theme.palette.text.secondary }}>
                   {quote.benefits.map((b, index) => (
                     <li key={index}>
-                      <Typography variant="body2">{b}</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {b}
+                      </Typography>
                     </li>
                   ))}
                 </ul>
+              </CardContent>
+              <Box sx={{ p: 2 }}>
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => handleConfirm(quote)}
+                  fullWidth
                 >
                   Confirm Quote
                 </Button>
-              </CardContent>
+              </Box>
             </Card>
           </Grid>
         ))}
       </Grid>
 
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Confirm This Quote?</DialogTitle>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        PaperProps={{
+          sx: {
+            bgcolor: 'background.paper'
+          }
+        }}
+      >
+        <DialogTitle color="text.primary">Confirm This Quote?</DialogTitle>
         <DialogContent>
-          <Typography>
+          <Typography color="text.primary">
             You are about to confirm insurance with <strong>{selectedQuote?.provider}</strong> at <strong>{selectedQuote?.monthlyPremium}</strong>.
           </Typography>
         </DialogContent>
@@ -125,7 +160,7 @@ const Quotes = () => {
           Quote confirmed! Redirecting to dashboard...
         </Alert>
       </Snackbar>
-    </div>
+    </Box>
   );
 };
 

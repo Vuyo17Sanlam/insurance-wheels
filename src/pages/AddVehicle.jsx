@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useTheme } from '@mui/material/styles';
+
 import { useNavigate } from 'react-router-dom';
 import {
   TextField,
@@ -27,6 +29,8 @@ import {
 } from '@mui/icons-material';
 
 export default function AddVehicle() {
+  const theme = useTheme();
+
   const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
 
@@ -125,7 +129,9 @@ export default function AddVehicle() {
         p: 3,
         boxShadow: 3,
         borderRadius: 4,
-        background: 'linear-gradient(to bottom right, #f9f9f9, #ffffff)'
+        background: theme.palette.mode === 'dark'
+          ? 'linear-gradient(to bottom right, #1e1e1e, #2d2d2d)'
+          : 'linear-gradient(to bottom right, #f9f9f9, #ffffff)'
       }}>
         <CardContent>
           <Box sx={{
@@ -137,7 +143,9 @@ export default function AddVehicle() {
             <DirectionsCar fontSize="large" color="primary" />
             <Typography variant="h4" component="h1" sx={{
               fontWeight: 700,
-              background: 'linear-gradient(to right, #1976d2, #4dabf5)',
+              background: theme.palette.mode === 'dark'
+              ? 'linear-gradient(to right, #90caf9, #bbdefb)'
+              : 'linear-gradient(to right, #1976d2, #4dabf5)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
             }}>

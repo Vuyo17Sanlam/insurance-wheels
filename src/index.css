@@ -1,21 +1,53 @@
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+:root {
+  --background-color: #ffffff;
+  --text-color: #213547;
+  --link-color: #646cff;
+  --link-hover-color: #535bf2;
+  --button-bg-color: #f9f9f9;
+  --button-border-hover: #646cff;
+  --navbar-bg: #1976d2;
+  --navbar-text: #ffffff;
+  --navbar-link: #e3f2fd;
+  --navbar-link-hover: #ffffff;
 }
-a:hover {
-  color: #535bf2;
+
+[data-theme="dark"] {
+  --background-color: #121212;
+  --text-color: rgba(255, 255, 255, 0.87);
+  --link-color: #9fa8ff;
+  --link-hover-color: #b5bcff;
+  --button-bg-color: #2d2d2d;
+  --button-border-hover: #9fa8ff;
+  --navbar-bg: #0d47a1;
+  --navbar-text: #ffffff;
+  --navbar-link: #bbdefb;
+  --navbar-link-hover: #ffffff;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a {
+  font-weight: 500;
+  color: var(--link-color);
+  text-decoration: inherit;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--link-hover-color);
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  color: var(--text-color);
 }
 
 button {
@@ -27,23 +59,15 @@ button {
   font-family: inherit;
   cursor: pointer;
   transition: border-color 0.25s;
+  background-color: var(--button-bg-color);
+  color: var(--text-color);
 }
+
 button:hover {
-  border-color: #646cff;
+  border-color: var(--button-border-hover);
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
 }
