@@ -1,12 +1,29 @@
-# React + Vite
+# Vehicle Management App  
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple React CRUD application for managing vehicle data, built as an assessment task.  
 
-Currently, two official plugins are available:
+## What's Inside  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **CRUD Operations**  
+  - Create, view, edit, and delete vehicles  
+  - View vehicle details and generate quotes  
 
-## Expanding the ESLint configuration
+- **Pages**  
+  - Dashboard with vehicle statistics  
+  - Vehicle list view  
+  - Add/edit forms  
+  - Quote management  
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Features**  
+  - Dark/light theme toggle  
+  - Responsive Material-UI components  
+  - Basic error handling and loading states  
+  - Simple charts for data visualization  
+
+## Tech Used  
+
+- React  
+- Material-UI (MUI)  
+- React Router  
+
+The app demonstrates basic frontend functionality without backend integration (uses mock data handling). The structure follows standard React practices with component organization and state management.
